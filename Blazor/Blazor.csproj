@@ -3,5 +3,9 @@
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>Blazor</RootNamespace>
   </PropertyGroup>
+  <Target Name="BuildTailwind" BeforeTargets="Build">
+    <Exec Command="npm run build:css" WorkingDirectory="$(MSBuildProjectDirectory)" />
+  </Target>
 </Project>

@@ -1,0 +1,11 @@
+@inherits LayoutComponentBase
+
+<div class="min-h-screen flex flex-col">
+    <NavMenu />
+    <main class="flex-1 max-w-5xl mx-auto w-full px-4 py-8">
+        @Body
+    </main>
+    <footer class="bg-white border-t border-gray-200 text-center text-sm text-gray-400 py-4">
+        &copy; @DateTime.Now.Year Good Hamburger
+    </footer>
+</div>

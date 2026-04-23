@@ -2,6 +2,31 @@
 
 Sistema de registro de pedidos para a lanchonete Good Hamburger. API REST em ASP.NET Core com frontend em Blazor Server.
 
+## Início rápido
+
+> Requer [.NET 10 SDK](https://dotnet.microsoft.com/download) e [Docker](https://www.docker.com/products/docker-desktop) instalados.
+
+A partir da pasta `GoodHamburger/`, um único comando sobe o banco, aplica as migrations, semeia o cardápio e abre o navegador:
+
+**PowerShell:**
+
+```powershell
+.\start.ps1
+```
+
+**Git Bash:**
+
+```bash
+bash start.sh
+```
+
+| | URL |
+| --- | --- |
+| Frontend | <http://localhost:5200> |
+| Swagger | <http://localhost:5100/swagger> |
+
+---
+
 ## Pré-requisitos
 
 - [.NET 10 SDK](https://dotnet.microsoft.com/download)

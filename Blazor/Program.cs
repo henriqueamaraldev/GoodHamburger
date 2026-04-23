@@ -1,5 +1,10 @@
 using Blazor.Services.Menu;
 using Blazor.Services.Orders;
+using System.Globalization;
+
+var cultureInfo = new CultureInfo("pt-BR");
+CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
 
 var builder = WebApplication.CreateBuilder(args);
 

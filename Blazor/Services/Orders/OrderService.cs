@@ -20,5 +20,5 @@ public class OrderService : ApiService, IOrderService
         => PutAsync<OrderModel>($"orders/{id}", request, ct);
 
     public Task DeleteAsync(Guid id, CancellationToken ct = default)
-        => DeleteAsync($"orders/{id}", ct);
+        => HttpDeleteAsync($"orders/{id}", ct);
 }

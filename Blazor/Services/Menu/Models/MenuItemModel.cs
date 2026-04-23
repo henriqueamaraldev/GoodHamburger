@@ -10,4 +10,6 @@ public record MenuItemModel(
 {
     public bool IsSandwich => Type == "Sandwich";
     public bool IsSide => Type == "Side";
+    public bool IsFries => SideType == "Fries";
+    public bool IsSoda  => SideType == "Soda";
 }

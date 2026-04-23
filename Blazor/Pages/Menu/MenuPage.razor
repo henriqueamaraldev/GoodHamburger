@@ -22,7 +22,7 @@
             {
                 <div>
                     <h2 class="text-sm font-semibold uppercase tracking-widest text-gray-400 mb-3">
-                        @(group.Key == "Sandwich" ? "Sanduíches" : "Acompanhamentos")
+                        @(group.First().IsSandwich ? "Sanduíches" : "Acompanhamentos")
                     </h2>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         @foreach (var item in group)
@@ -32,8 +32,8 @@
                                     <p class="font-semibold text-gray-800">@item.Name</p>
                                     <p class="text-xs text-gray-400 mt-0.5">
                                         @if (item.IsSandwich) { <span>🥪 Sanduíche</span> }
-                                        else if (item.SideType == "Fries") { <span>🍟 Batata frita</span> }
-                                        else if (item.SideType == "Soda") { <span>🥤 Refrigerante</span> }
+                                        else if (item.IsFries) { <span>🍟 Batata frita</span> }
+                                        else if (item.IsSoda)  { <span>🥤 Refrigerante</span> }
                                     </p>
                                 </div>
                                 <span class="text-brand-600 font-bold text-lg">

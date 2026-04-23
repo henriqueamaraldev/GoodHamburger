@@ -2,6 +2,7 @@
 @rendermode InteractiveServer
 @inject IOrderService OrderService
 @inject NavigationManager Nav
+@inject IJSRuntime JS
 
 <PageTitle>Pedidos — Good Hamburger</PageTitle>
 
@@ -64,8 +65,9 @@
                                 Editar
                             </a>
                             <button @onclick="() => DeleteAsync(order.Id)"
-                                    class="text-sm text-red-500 hover:text-red-700 border border-red-200 rounded-lg px-3 py-1.5 transition-colors">
-                                Excluir
+                                    disabled="@(_deletingId == order.Id)"
+                                    class="text-sm text-red-500 hover:text-red-700 border border-red-200 rounded-lg px-3 py-1.5 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                                @(_deletingId == order.Id ? "Excluindo…" : "Excluir")
                             </button>
                         </div>
                     </div>
@@ -79,6 +81,7 @@
     private IEnumerable<OrderModel> _orders = [];
     private bool _loading = true;
     private string? _error;
+    private Guid? _deletingId;
 
     protected override async Task OnInitializedAsync() => await LoadAsync();
 
@@ -102,6 +105,11 @@
 
     private async Task DeleteAsync(Guid id)
     {
+        if (!await JS.InvokeAsync<bool>("confirm", "Excluir este pedido?"))
+            return;
+
+        _deletingId = id;
+        _error = null;
         try
         {
             await OrderService.DeleteAsync(id);
@@ -110,6 +118,10 @@
         catch (Exception ex)
         {
             _error = ex.Message;
+        }
+        finally
+        {
+            _deletingId = null;
         }
     }
 }

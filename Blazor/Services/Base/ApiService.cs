@@ -40,7 +40,7 @@ public abstract class ApiService
         return await response.Content.ReadFromJsonAsync<T>(_json, ct);
     }
 
-    protected async Task DeleteAsync(string url, CancellationToken ct = default)
+    protected async Task HttpDeleteAsync(string url, CancellationToken ct = default)
     {
         var response = await _http.DeleteAsync(url, ct);
         await EnsureSuccessAsync(response);

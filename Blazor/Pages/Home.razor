@@ -1,6 +1,11 @@
 @page "/"
+@rendermode InteractiveServer
 @inject NavigationManager Nav
 
 @code {
-    protected override void OnInitialized() => Nav.NavigateTo("/menu");
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+            Nav.NavigateTo("/menu");
+    }
 }

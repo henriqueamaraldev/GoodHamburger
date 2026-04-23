@@ -5,3 +5,15 @@ obj/
 appsettings.Development.json
 node_modules/
 wwwroot/app.css
+Domain/bin
+Domain/obj
+Application/bin
+Application/obj
+Infrastructure/bin
+Infrastructure/obj
+Api/bin
+Api/obj
+Blazor/bin
+Blazor/obj
+Tests/bin
+Tests/obj

@@ -1,0 +1,80 @@
+@page "/menu"
+@rendermode InteractiveServer
+@inject IMenuService MenuService
+
+<PageTitle>Cardápio — Good Hamburger</PageTitle>
+
+<div class="space-y-6">
+    <h1 class="text-2xl font-bold text-gray-800">Cardápio</h1>
+
+    @if (_loading)
+    {
+        <LoadingSpinner />
+    }
+    else if (_error is not null)
+    {
+        <ErrorAlert Message="@_error" />
+    }
+    else
+    {
+        <div class="space-y-8">
+            @foreach (var group in _items.GroupBy(i => i.Type))
+            {
+                <div>
+                    <h2 class="text-sm font-semibold uppercase tracking-widest text-gray-400 mb-3">
+                        @(group.Key == "Sandwich" ? "Sanduíches" : "Acompanhamentos")
+                    </h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        @foreach (var item in group)
+                        {
+                            <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5 flex justify-between items-center hover:shadow-md transition-shadow">
+                                <div>
+                                    <p class="font-semibold text-gray-800">@item.Name</p>
+                                    <p class="text-xs text-gray-400 mt-0.5">
+                                        @if (item.IsSandwich) { <span>🥪 Sanduíche</span> }
+                                        else if (item.SideType == "Fries") { <span>🍟 Batata frita</span> }
+                                        else if (item.SideType == "Soda") { <span>🥤 Refrigerante</span> }
+                                    </p>
+                                </div>
+                                <span class="text-brand-600 font-bold text-lg">
+                                    R$ @item.Price.ToString("F2")
+                                </span>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="rounded-xl bg-brand-50 border border-brand-200 p-5 text-sm text-brand-800 space-y-1">
+            <p class="font-semibold mb-2">Descontos disponíveis</p>
+            <ul class="list-disc list-inside space-y-0.5 text-brand-700">
+                <li>Sanduíche + Batata frita → <strong>10% off</strong></li>
+                <li>Sanduíche + Refrigerante → <strong>15% off</strong></li>
+                <li>Sanduíche + Batata frita + Refrigerante → <strong>20% off</strong></li>
+            </ul>
+        </div>
+    }
+</div>
+
+@code {
+    private IEnumerable<MenuItemModel> _items = [];
+    private bool _loading = true;
+    private string? _error;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _items = await MenuService.GetMenuAsync();
+        }
+        catch (Exception ex)
+        {
+            _error = ex.Message;
+        }
+        finally
+        {
+            _loading = false;
+        }
+    }
+}

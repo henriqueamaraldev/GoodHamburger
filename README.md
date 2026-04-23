@@ -5,54 +5,70 @@ Sistema de registro de pedidos para a lanchonete Good Hamburger. API REST em ASP
 ## Pré-requisitos
 
 - [.NET 10 SDK](https://dotnet.microsoft.com/download)
-- [PostgreSQL 15+](https://www.postgresql.org/download/) rodando em `localhost:5436`
+- [Docker](https://www.docker.com/products/docker-desktop) (para o PostgreSQL)
 - [Node.js](https://nodejs.org/) (apenas se quiser recompilar o CSS do Blazor)
 
-> A string de conexão padrão usa `Host=localhost;Port=5436;Database=good_hamburger;Username=postgres;Password=password`. Ajuste em `Api/appsettings.Development.json` se necessário.
+## Executando (forma rápida)
 
-## Executando
+A partir da pasta `GoodHamburger/`, execute o script correspondente ao seu terminal. Ele sobe o banco via Docker, aguarda o PostgreSQL ficar pronto, inicia a API (que aplica as migrations e o seed automaticamente) e em seguida o Blazor, abrindo o navegador ao final.
 
-Todos os comandos a partir da raiz do repositório.
+**PowerShell:**
 
-### 1. API
+```powershell
+.\start.ps1
+```
+
+**Git Bash:**
 
 ```bash
-cd GoodHamburger/Api
-dotnet run
+bash start.sh
+```
+
+- Frontend: `http://localhost:5200`
+- API / Swagger: `http://localhost:5100/swagger`
+
+## Executando manualmente
+
+Todos os comandos a partir da pasta `GoodHamburger/`.
+
+### 1. Banco de dados
+
+```bash
+docker-compose up -d
+```
+
+### 2. API
+
+```bash
+cd Api && dotnet run
 ```
 
 Na primeira execução em `Development`, as migrations são aplicadas e o banco é populado com o cardápio automaticamente.
 
-- API: `http://localhost:5100`
-- Swagger: `http://localhost:5100/swagger`
-
-### 2. Frontend (Blazor)
+### 3. Frontend (Blazor)
 
 Em outro terminal:
 
 ```bash
-cd GoodHamburger/Blazor
-dotnet run
+cd Blazor && dotnet run
 ```
 
-- Frontend: `http://localhost:5200`
-
-### 3. Testes
+### 4. Testes
 
 ```bash
-dotnet test GoodHamburger/Tests/Tests.csproj
+dotnet test Tests/Tests.csproj
 ```
 
 Para rodar um teste específico:
 
 ```bash
-dotnet test GoodHamburger/Tests/Tests.csproj --filter "FullyQualifiedName~SandwichFriesSoda"
+dotnet test Tests/Tests.csproj --filter "FullyQualifiedName~SandwichFriesSoda"
 ```
 
 ## Cardápio
 
 | Item | Tipo | Preço |
-|------|------|-------|
+| ---- | ---- | ----- |
 | X Burger | Sanduíche | R$ 5,00 |
 | X Egg | Sanduíche | R$ 4,50 |
 | X Bacon | Sanduíche | R$ 7,00 |
@@ -62,7 +78,7 @@ dotnet test GoodHamburger/Tests/Tests.csproj --filter "FullyQualifiedName~Sandwi
 ## Regras de Desconto
 
 | Combo | Desconto |
-|-------|----------|
+| ----- | -------- |
 | Sanduíche + batata + refrigerante | 20% |
 | Sanduíche + refrigerante | 15% |
 | Sanduíche + batata | 10% |
@@ -71,16 +87,16 @@ Cada pedido aceita no máximo um sanduíche, uma batata e um refrigerante. Itens
 
 ## Endpoints
 
-### Cardápio
+### Menu
 
 | Método | Rota | Descrição |
-|--------|------|-----------|
+| ------ | ---- | --------- |
 | `GET` | `/api/menu` | Lista todos os itens do cardápio |
 
 ### Pedidos
 
 | Método | Rota | Descrição |
-|--------|------|-----------|
+| ------ | ---- | --------- |
 | `POST` | `/api/orders` | Cria um pedido |
 | `GET` | `/api/orders` | Lista todos os pedidos |
 | `GET` | `/api/orders/{id}` | Consulta um pedido por ID |
@@ -117,7 +133,7 @@ POST /api/orders
 
 Clean Architecture com quatro camadas. A dependência segue a direção `Api → Application → Domain`; `Infrastructure` implementa as interfaces definidas em `Application`.
 
-```
+```text
 Domain/          Entidades e enums. Sem dependências externas.
 Application/     Serviços, DTOs e exceções de domínio. Referencia Infrastructure via interfaces.
 Infrastructure/  EF Core, AppDbContext, repositórios e migrations.
@@ -142,6 +158,5 @@ Tests/           xUnit + NSubstitute. Testes de domínio e de serviço com repos
 
 - **Status de pedido além de `Pending`** — o desafio não define um fluxo de status (ex.: em preparo, entregue), então apenas `Pending` foi implementado.
 - **Autenticação/autorização** — fora do escopo do desafio.
-- **Docker Compose** — o banco precisa ser configurado manualmente. Um `docker-compose.yml` facilitaria a execução sem instalação local do PostgreSQL.
 - **Paginação na listagem** — `GET /api/orders` retorna todos os pedidos sem paginação. Para volumes maiores seria necessário cursor ou offset/limit.
 - **Internacionalização das mensagens de erro** — as mensagens de validação estão em inglês.
